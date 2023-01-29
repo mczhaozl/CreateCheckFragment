@@ -10,8 +10,8 @@ type TCheckFn = (string: String) => Boolean
 type TListItem = string | RegExp | TCheckFn
 
 export default class CheckFragment {
-    constructor() {
-    }
+    @needLength
+    @LimitEnvironment(['development'])
     apply(compiler) {
         compiler.hooks.emit.callAsync('UndoChecker', async () => {
             return checkFiler(config)
@@ -33,7 +33,23 @@ async function checkFiler(config,) {
         })
     })])
 }
-
+function LimitEnvironment(rules: Array<string>) {
+    return function (target, name, descriptor) {
+        if (rules.includes(NODE_ENV)) {
+            return { ...descriptor, value: noop }
+        }
+        return descriptor
+    }
+}
+function needLength(target, name, descriptor) {
+    if (config.length < 1) {
+        return { ...descriptor, value: noop }
+    }
+    return descriptor
+}
+function noop() {
+    return undefined
+}
 /**
  * 接受函数返回根文件夹下所有符合要求的文件路径组成的数组
  * @param isNeed 
