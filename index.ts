@@ -5,29 +5,55 @@ const path = require('path')
 const nowPath = path.resolve('') // 返回cmd 路径
 const fs = require('fs-extra')
 
-
 type TCheckFn = (string: String) => Boolean
 type TListItem = string | RegExp | TCheckFn
 
-export default class CheckFragment {
-    @needLength
-    @LimitEnvironment(['development'])
-    apply(compiler) {
-        compiler.hooks.emit.callAsync('UndoChecker', async () => {
-            return checkFiler(config)
-        })
+function CreateCheckFragment(config) {
+    const setting = Object.assign({
+        ruleList: [],
+        needCheckFile(path) {
+            return path.includes('.js')
+        },
+        throwError(errorInfo) {
+            throw new Error(`
+            自定义校验未通过
+            在${errorInfo.path} 文件夹下发现了
+            ${errorInfo.trim}中包含了
+            ${errorInfo.rule}字段 
+            打包被强制中断,请处理之后重新打包
+            `)
+        },
+        checkEnvironment: ['development']
+    }, config)
+    class CheckFragment {
+        @needLength(config.ruleList)
+        @LimitEnvironment(config.checkEnvironment)
+        apply(compiler) {
+            compiler.hooks.emit.callAsync('UndoChecker', async () => {
+                return checkFiler(config)
+            })
+        }
     }
+    return CheckFragment
 }
-async function checkFiler(config,) {
+// export default class CheckFragment {
+//     @needLength([])
+//     @LimitEnvironment(['development'])
+//     apply(compiler) {
+//         compiler.hooks.emit.callAsync('UndoChecker', async () => {
+//             return checkFiler(config)
+//         })
+//     }
+// }
+async function checkFiler({ ruleList, throwError }) {
     const allFile = await loopFiler(item => item.includes('js'))
     return await Promise.all([allFile.map(async path => {
         const string = await fs.readFile(path).then(res => res.toString())
         const list = string.split('\n').map(item => item.trim())
         list.forEach((item, index) => {
-            config.forEach(rule => {
-                const has = targetRule(rule, item)
-                if (has) {
-                    throw { path, trim: item, index: index + 1, target: rule }
+            ruleList.forEach(rule => {
+                if (targetRule(rule, item)) {
+                    throwError({ path, trim: item, index: index + 1, rule: rule })
                 }
             })
         })
@@ -41,11 +67,13 @@ function LimitEnvironment(rules: Array<string>) {
         return descriptor
     }
 }
-function needLength(target, name, descriptor) {
-    if (config.length < 1) {
-        return { ...descriptor, value: noop }
+function needLength(ruleList) {
+    return function (target, name, descriptor) {
+        if (ruleList.length < 1) {
+            return { ...descriptor, value: noop }
+        }
+        return descriptor
     }
-    return descriptor
 }
 function noop() {
     return undefined
