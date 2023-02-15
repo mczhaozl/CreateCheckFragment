@@ -1,5 +1,4 @@
 
-const config = require('./config')
 const NODE_ENV = process.env.NODE_ENV as string
 const path = require('path')
 const nowPath = path.resolve('') // 返回cmd 路径
@@ -8,7 +7,7 @@ const fs = require('fs-extra')
 type TCheckFn = (string: String) => Boolean
 type TListItem = string | RegExp | TCheckFn
 
-function CreateCheckFragment(config) {
+export default function CreateCheckFragment(config) {
     const setting = Object.assign({
         ruleList: [],
         needCheckFile(path) {
@@ -26,8 +25,8 @@ function CreateCheckFragment(config) {
         checkEnvironment: ['development']
     }, config)
     class CheckFragment {
-        @needLength(config.ruleList)
-        @LimitEnvironment(config.checkEnvironment)
+        @needLength(setting.ruleList)
+        @LimitEnvironment(setting.checkEnvironment)
         apply(compiler) {
             compiler.hooks.emit.callAsync('UndoChecker', async () => {
                 return checkFiler(config)
