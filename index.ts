@@ -1,4 +1,10 @@
 
+/**
+ * author ： mczhaozl
+ * time ： 2023年2月22日 17:09:36
+ * phone ： 17746614804
+ * email ： 17746614804@163.com
+ */
 const NODE_ENV = process.env.NODE_ENV as string
 const path = require('path')
 const nowPath = path.resolve('') // 返回cmd 路径
