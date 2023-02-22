@@ -1,4 +1,10 @@
 
+/**
+ * author ： mczhaozl
+ * time ： 2023年2月22日 17:09:36
+ * phone ： 17746614804
+ * email ： 17746614804@163.com
+ */
 type TCheckFn = (string: String) => Boolean
 /**
  * 如果填写字符串 则判断代码里面是否包含了该字符串
@@ -41,4 +47,7 @@ const config: IConfig = {
         `)
     }
 }
-export default config
+const CreateCheckFragment = require('CreateCheckFragment')
+const CheckFragment = CreateCheckFragment(config)
+module.exports =  CheckFragment
+// 在 webpack.config.js 中使用 new CheckFragment() 即可
