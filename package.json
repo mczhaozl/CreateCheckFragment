@@ -1,0 +1,25 @@
+{
+  "name": "checkfragment",
+  "version": "1.0.0",
+  "description": "a plugin while verifies code for dangerous fragments",
+  "main": "indexJs.js",
+  "scripts": {
+    "test": "1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mczhaozl/CreateCheckFragment.git"
+  },
+  "keywords": [
+    "checkFragment"
+  ],
+  "author": "mczhaozl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mczhaozl/CreateCheckFragment/issues"
+  },
+  "homepage": "https://github.com/mczhaozl/CreateCheckFragment#readme",
+  "dependencies": {
+    "fs-extra": "^11.1.1"
+  }
+}

@@ -15,5 +15,8 @@
 5. 由于某种原因我想使用js而不是ts怎么办<br/>
    粘贴我的indexJs.js 在项目中使用即可<br/>
    
-6. 是否还有其他类型的插件<br/>
+6. 插件集有哪些，是否还有其它的插件<br />
+   1. [版本记录器](https://github.com/mczhaozl/VersionRecord)<br />
+   2. [代码片段校验器](https://github.com/mczhaozl/CreateCheckFragment)<br />
+   3. [代码防篡改](https://github.com/mczhaozl/LockCode)<br />
    
